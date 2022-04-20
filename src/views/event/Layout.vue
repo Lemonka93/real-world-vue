@@ -1,50 +1,56 @@
 <template >
-  <div v-if = "event" >
-    <h1 >{{ event.title }}</h1 >
+  <div v-if="event">
+    <h1>{{ event.title }}</h1>
 
-    <div id = "nav" >
-      <router-link :to = "{ name: 'EventDetails', params: { id: event.id } }" >Details</router-link >
+    <div id="nav">
+      <router-link :to="{ name: 'EventDetails', params: { id: event.id } }"
+        >Details</router-link
+      >
       |
-      <router-link :to = "{ name: 'EventRegister', params: { id: event.id } }" >Register</router-link >
+      <router-link :to="{ name: 'EventRegister', params: { id: event.id } }"
+        >Register</router-link
+      >
       |
-      <router-link :to = "{ name: 'EventEdit', params: { id: event.id } }" >Edit</router-link >
-    </div >
-    <router-view :event = "event" />
-  </div >
+      <router-link :to="{ name: 'EventEdit', params: { id: event.id } }"
+        >Edit</router-link
+      >
+    </div>
+    <router-view :event="event" />
+  </div>
 </template >
 
 <script >
-import EventService from '@/services/EventService'
-
+import EventService from "@/services/EventService";
 
 export default {
-  name: 'EventLayout',
-  props: ['id'],
+  name: "EventLayout",
+  props: ["id"],
   data() {
     return {
       event: null,
-    }
+    };
   },
   created() {
-    console.log('created')
-    EventService.getEvent(this.id).then(
-        response => {
-          this.event = response.data
-          console.log('!!!', this.event)
-        },
-    ).catch(error => {
-      console.log(error)
-      if (error.resource && error.resource.status == 404) {
-        this.$router.push({name: '404Resource', params: {resource: 'event'}})
-      }else{
-        this.$router.push({name:'NetworkError'})
-      }
-    })
-
+    console.log("created");
+    EventService.getEvent(this.id)
+      .then((response) => {
+        this.event = response.data;
+        console.log("!!!", this.event);
+      })
+      .catch((error) => {
+        console.log(error);
+        if (error.response && error.response.status == 404) {
+          this.$router.push({
+            name: "404Resource",
+            params: { resource: "event" },
+          });
+        } else {
+          this.$router.push({ name: "NetworkError" });
+        }
+      });
   },
-}
+};
 </script >
 
 <style scoped >
-
 </style >
