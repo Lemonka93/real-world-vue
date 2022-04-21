@@ -10,6 +10,7 @@ import NetworkError from "../views/NetworkError";
 import NProgress from "nprogress";
 import EventService from "@/services/EventService.js";
 import GStore from "@/store";
+import { setTimeout } from "core-js";
 
 const routes = [
   {
@@ -54,6 +55,7 @@ const routes = [
         path: "edit",
         name: "EventEdit",
         component: EventEdit,
+        meta: { requireAuth: true },
       },
     ],
   },
@@ -103,10 +105,29 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
+  scrollBehavior(to, from, savedPosition) {
+    if (savedPosition) {
+      return savedPosition;
+    }
+    return { top: 0 };
+  },
 });
 
-router.beforeEach(() => {
+router.beforeEach((to, from) => {
   NProgress.start();
+
+  const notAuthorised = true;
+  if (to.meta.requireAuth && notAuthorised) {
+    GStore.flashMessage = "Sorry, you are not authorised to view this page";
+    setTimeout(() => {
+      GStore.flashMessage = "";
+    }, 3000);
+    if (from.href) {
+      return false;
+    } else {
+      return { path: "/" };
+    }
+  }
 });
 router.afterEach(() => {
   NProgress.done();
