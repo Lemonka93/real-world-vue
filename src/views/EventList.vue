@@ -1,4 +1,4 @@
-<template >
+<template>
   <h1>Events For Good</h1>
   <div class="events">
     <EventCard v-for="event in events" :event="event" :key="event.id" />
@@ -20,9 +20,9 @@
       </router-link>
     </div>
   </div>
-</template >
+</template>
 
-<script >
+<script>
 // @ is an alias to /src
 import EventService from "@/services/EventService.js";
 import EventCard from "@/components/EventCard";
@@ -56,17 +56,13 @@ export default {
       });
   },
   beforeRouteUpdate(routeTo) {
-    NProgress.start();
-    EventService.getEvents(2, parseInt(routeTo.query.page) || 1)
+    return EventService.getEvents(2, parseInt(routeTo.query.page) || 1)
       .then((response) => {
         this.events = response.data;
         this.totalEvents = response.headers["x-total-count"];
       })
       .catch(() => {
         return { name: "NetworkError" };
-      })
-      .finally(() => {
-        NProgress.done();
       });
   },
   computed: {
@@ -76,9 +72,9 @@ export default {
     },
   },
 };
-</script >
+</script>
 
-<style scoped >
+<style scoped>
 .events {
   display: flex;
   flex-direction: column;
@@ -101,4 +97,4 @@ export default {
 #page-next {
   text-align: right;
 }
-</style >
+</style>

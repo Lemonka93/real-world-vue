@@ -1,56 +1,29 @@
-<template >
-  <div v-if="event">
-    <h1>{{ event.title }}</h1>
+<template>
+  <div v-if="GStore.event">
+    <h1>{{ GStore.event.title }}</h1>
 
     <div id="nav">
-      <router-link :to="{ name: 'EventDetails', params: { id: event.id } }"
+      <router-link :to="{ name: 'EventDetails', params: { id: GStore.event.id } }"
         >Details</router-link
       >
       |
-      <router-link :to="{ name: 'EventRegister', params: { id: event.id } }"
+      <router-link :to="{ name: 'EventRegister', params: { id: GStore.event.id } }"
         >Register</router-link
       >
       |
-      <router-link :to="{ name: 'EventEdit', params: { id: event.id } }"
+      <router-link :to="{ name: 'EventEdit', params: { id: GStore.event.id } }"
         >Edit</router-link
       >
     </div>
-    <router-view :event="event" />
+    <router-view :event="GStore.event" />
   </div>
-</template >
+</template>
 
-<script >
-import EventService from "@/services/EventService";
-
+<script>
 export default {
   name: "EventLayout",
-  props: ["id"],
-  data() {
-    return {
-      event: null,
-    };
-  },
-  created() {
-    console.log("created");
-    EventService.getEvent(this.id)
-      .then((response) => {
-        this.event = response.data;
-        console.log("!!!", this.event);
-      })
-      .catch((error) => {
-        console.log(error);
-        if (error.response && error.response.status == 404) {
-          this.$router.push({
-            name: "404Resource",
-            params: { resource: "event" },
-          });
-        } else {
-          this.$router.push({ name: "NetworkError" });
-        }
-      });
-  },
+  inject: ["GStore"],
 };
-</script >
+</script>
 
-<style scoped >
-</style >
+<style scoped></style>
