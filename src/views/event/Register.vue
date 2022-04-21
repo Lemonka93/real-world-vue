@@ -11,11 +11,12 @@ export default {
   methods: {
     register() {
       //assuming successful API call to register them
-      this.GStore.flashMessage =
+      this.GStore.flashMessage.message =
         "You are successfully registered for " + this.event.title;
+      this.GStore.flashMessage.color = "#06c145";
       setTimeout(() => {
-        this.GStore.flashMessage = "";
-      }, 3000);
+        this.GStore.flashMessage.message = "";
+      }, 5000);
       this.$router.push({
         name: "EventDetails",
       });
@@ -24,5 +25,4 @@ export default {
 };
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

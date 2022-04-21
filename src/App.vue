@@ -1,7 +1,11 @@
 <template>
   <div id="app">
-    <div id="flashMessage" v-if="GStore.flashMessage">
-      {{ GStore.flashMessage }}
+    <div
+      id="flashMessage"
+      v-if="GStore.flashMessage.message"
+      :style="{ background: GStore.flashMessage.color }"
+    >
+      {{ GStore.flashMessage.message }}
     </div>
     <div id="nav">
       <router-link :to="{ name: 'EventList' }">Events</router-link> |
@@ -42,7 +46,6 @@ h4 {
 }
 @keyframes greenfade {
   from {
-    background: #06c145;
     color: rgba(0, 0, 0, 1);
   }
   to {
@@ -51,6 +54,6 @@ h4 {
   }
 }
 #flashMessage {
-  animation: greenfade 3s;
+  animation: greenfade 5s;
 }
 </style>

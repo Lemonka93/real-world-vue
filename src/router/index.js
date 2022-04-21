@@ -118,10 +118,12 @@ router.beforeEach((to, from) => {
 
   const notAuthorised = true;
   if (to.meta.requireAuth && notAuthorised) {
-    GStore.flashMessage = "Sorry, you are not authorised to view this page";
+    GStore.flashMessage.message =
+      "Sorry, you are not authorised to view this page";
+    GStore.flashMessage.color = "red";
     setTimeout(() => {
-      GStore.flashMessage = "";
-    }, 3000);
+      GStore.flashMessage.message = "";
+    }, 5000);
     if (from.href) {
       return false;
     } else {
