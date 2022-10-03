@@ -9,8 +9,9 @@ import NotFound from "../views/NotFound";
 import NetworkError from "../views/NetworkError";
 import NProgress from "nprogress";
 import EventService from "@/services/EventService.js";
-import GStore from "@/store";
+import GStore from "@/store/gStore";
 import { setTimeout } from "core-js";
+import EventCreate from "@/views/EventCreate";
 
 const routes = [
   {
@@ -73,7 +74,11 @@ const routes = [
     path: "/event/:afterEvent(.*)",
     redirect: (to) => ({ path: "/events/" + to.params.afterEvent }),
   },
-
+  {
+    path: "/event/create",
+    name: "EventCreate",
+    component: EventCreate,
+  },
   {
     path: "/about-us",
     name: "About",

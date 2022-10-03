@@ -1,5 +1,15 @@
-import { reactive } from "vue";
-export default reactive({
-  flashMessage: { message: "", color: "#06c145" },
-  event: null,
+import { createStore } from "vuex";
+
+export default createStore({
+  state: {
+    user: "Valeriya Mironova",
+    events: [],
+  },
+  mutations: {
+    ADD_EVENT(state, event) {
+      state.events.push(event);
+    },
+  },
+  actions: {},
+  modules: {},
 });
