@@ -2,24 +2,21 @@
   <div id="app">
     <div
       id="flashMessage"
-      v-if="GStore.flashMessage.message"
-      :style="{ background: GStore.flashMessage.color }"
+      v-if="$store.state.flashMessage.message"
+      :style="{ background: $store.state.flashMessage.color }"
     >
-      {{ GStore.flashMessage.message }}
+      {{ $store.state.flashMessage.message }}
     </div>
     <div id="nav">
       <router-link :to="{ name: 'EventList' }">Events</router-link> |
-      <router-link :to="{ name: 'About' }">About</router-link> | 
+      <router-link :to="{ name: 'About' }">About</router-link> |
       <router-link :to="{ name: 'EventCreate' }">Create Event</router-link>
-
     </div>
   </div>
   <router-view />
 </template>
 <script>
-export default {
-  inject: ["GStore"],
-};
+export default {};
 </script>
 
 <style>
@@ -46,7 +43,6 @@ export default {
 h4 {
   font-size: 20px;
   font-weight: 700;
-
 }
 @keyframes greenfade {
   from {
@@ -94,15 +90,13 @@ input {
   height: 30px;
   margin-bottom: 24px;
 }
-input[type=text] {
+input[type="text"] {
   padding: 0px 10px;
 }
 input:focus {
   border-color: #16c0b0;
   outline: 0;
 }
-
-
 
 .form-container {
   display: flex;
@@ -115,5 +109,4 @@ select:focus {
   border-color: #16c0b0;
   outline: 0;
 }
-
 </style>

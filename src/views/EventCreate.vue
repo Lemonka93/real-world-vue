@@ -1,8 +1,7 @@
 <template>
   <h1>Create an event</h1>
-  
+
   <div class="form-container">
-  
     <form @submit.prevent="onSubmit">
       <label>Select a category: </label>
       <select v-model="event.category">
@@ -11,95 +10,99 @@
           :value="option"
           :key="option"
           :selected="option === event.category"
-        >{{ option }}</option>
+        >
+          {{ option }}
+        </option>
       </select>
-  
+
       <h3>Name & describe your event</h3>
-  
+
       <label>Title</label>
-      <input
-        v-model="event.title"
-        type="text"
-        placeholder="Title"
-      >
-  
+      <input v-model="event.title" type="text" placeholder="Title" />
+
       <label>Description</label>
       <input
         v-model="event.description"
         type="text"
         placeholder="Description"
       />
-  
+
       <h3>Where is your event?</h3>
-  
+
       <label>Location</label>
-      <input
-        v-model="event.location"
-        type="text"
-        placeholder="Location"
-      />
-  
+      <input v-model="event.location" type="text" placeholder="Location" />
+
       <h3>When is your event?</h3>
       <label>Date</label>
-      <input
-        v-model="event.date"
-        type="text"
-        placeholder="Date"
-      />
-  
+      <input v-model="event.date" type="text" placeholder="Date" />
+
       <label>Time</label>
-      <input
-        v-model="event.time"
-        type="text"
-        placeholder="Time"
-      />
-  
+      <input v-model="event.time" type="text" placeholder="Time" />
+
       <button type="submit">Submit</button>
     </form>
-  
   </div>
-  </template>
-  
-  <script>
-    import {v4 as uuidv4 }from 'uuid'
-    import EventService from '@/services/EventService'
-  export default {
-    data () {
-      return {
-        categories: [
-          'sustainability',
-          'nature',
-          'animal welfare',
-          'housing',
-          'education',
-          'food',
-          'community'
-        ],
-        event: {
-          id: '',
-          category: '',
-          title: '',
-          description: '',
-          location: '',
-          date: '',
-          time: '',
-          organizer: ''
-        }
-      }
+</template>
+
+<script>
+import { v4 as uuidv4 } from "uuid";
+export default {
+  data() {
+    return {
+      categories: [
+        "sustainability",
+        "nature",
+        "animal welfare",
+        "housing",
+        "education",
+        "food",
+        "community",
+      ],
+      event: {
+        id: "",
+        category: "",
+        title: "",
+        description: "",
+        location: "",
+        date: "",
+        time: "",
+        organizer: "",
+      },
+    };
+  },
+  methods: {
+    onSubmit() {
+      const event = {
+        ...this.event,
+        id: uuidv4(),
+        organizer: this.$store.state.user,
+      };
+      this.$store
+        .dispatch("createEvent", event)
+        .then(() => {
+          this.$store.dispatch("changeFlashMessage", [
+            "Event created successfully",
+            "#06c145",
+          ]);
+          setTimeout(() => {
+            this.$store.dispatch("changeFlashMessage", ["", ""]);
+          }, 5000);
+          this.$router.push({
+            name: "EventDetails",
+            params: { id: event.id },
+          });
+        })
+        .catch((error) => {
+          if (error.code === "ERR_NETWORK") {
+            this.$router.push({ name: "NetworkError" });
+          } else {
+            this.$router.push({
+              name: "ErrorDisplay",
+              params: { error: error },
+            });
+          }
+        });
     },
-    methods: {
-      onSubmit() {
-        const event = {
-          ...this.event,
-          id:uuidv4(),
-          organizer:this.$store.state.user
-        }
-        // this.event.id =uuidv4()
-        // this.event.organizer = this.$store.state.user;
-        EventService.postEvent(event).then(
-          ()=>{this.$store.commit('ADD_EVENT',event)}
-        ).catch(error=>{console.log(error)})
-      }
-    }
-  }
-  </script>
+  },
+};
+</script>

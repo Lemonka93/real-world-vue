@@ -7,15 +7,15 @@
 export default {
   name: "EventRegister",
   props: ["event"],
-  inject: ["GStore"],
   methods: {
     register() {
-      //assuming successful API call to register them
-      this.GStore.flashMessage.message =
-        "You are successfully registered for " + this.event.title;
-      this.GStore.flashMessage.color = "#06c145";
+      this.$store.dispatch("changeFlashMessage", [
+        "You are successfully registered for " + this.event.title,
+        "#06c145",
+      ]);
+
       setTimeout(() => {
-        this.GStore.flashMessage.message = "";
+        this.$store.dispatch("changeFlashMessage", ["", ""]);
       }, 5000);
       this.$router.push({
         name: "EventDetails",

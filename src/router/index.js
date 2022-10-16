@@ -8,10 +8,10 @@ import EventLayout from "../views/event/Layout";
 import NotFound from "../views/NotFound";
 import NetworkError from "../views/NetworkError";
 import NProgress from "nprogress";
-import EventService from "@/services/EventService.js";
-import GStore from "@/store/gStore";
 import { setTimeout } from "core-js";
 import EventCreate from "@/views/EventCreate";
+import ErrorDisplay from "@/views/ErrorDisplay";
+import store from "../store/index";
 
 const routes = [
   {
@@ -21,26 +21,9 @@ const routes = [
     props: (route) => ({ page: parseInt(route.query.page) || 1 }),
   },
   {
-    path: "/events/:id", //event -> events
+    path: "/events/:id",
     name: "EventLayout",
     component: EventLayout,
-    beforeEnter: (to) => {
-      return EventService.getEvent(to.params.id)
-        .then((response) => {
-          GStore.event = response.data;
-        })
-        .catch((error) => {
-          console.log(error);
-          if (error.response && error.response.status == 404) {
-            return {
-              name: "404Resource",
-              params: { resource: "event" },
-            };
-          } else {
-            return { name: "NetworkError" };
-          }
-        });
-    },
     children: [
       {
         path: "",
@@ -105,6 +88,12 @@ const routes = [
     name: "NetworkError",
     component: NetworkError,
   },
+  {
+    path: "/error/:error",
+    name: "ErrorDisplay",
+    props: true,
+    component: ErrorDisplay,
+  },
 ];
 
 const router = createRouter({
@@ -120,14 +109,14 @@ const router = createRouter({
 
 router.beforeEach((to, from) => {
   NProgress.start();
-
   const notAuthorised = true;
   if (to.meta.requireAuth && notAuthorised) {
-    GStore.flashMessage.message =
-      "Sorry, you are not authorised to view this page";
-    GStore.flashMessage.color = "red";
+    store.dispatch("changeFlashMessage", [
+      "Sorry, you are not authorised to view this page",
+      "red",
+    ]);
     setTimeout(() => {
-      GStore.flashMessage.message = "";
+      store.dispatch("changeFlashMessage", ["", ""]);
     }, 5000);
     if (from.href) {
       return false;

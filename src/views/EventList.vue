@@ -24,51 +24,31 @@
 
 <script>
 // @ is an alias to /src
-import EventService from "@/services/EventService.js";
 import EventCard from "@/components/EventCard";
-import NProgress from "nprogress";
 export default {
   name: "EventList",
   components: {
     EventCard, // register EventCard as a child component
   },
   props: ["page"],
-  data() {
-    return {
-      events: null,
-      totalEvents: 0,
-    };
-  },
-  beforeRouteEnter(routeTo, routeFrom, next) {
-    NProgress.start();
-    EventService.getEvents(2, parseInt(routeTo.query.page) || 1)
-      .then((response) => {
-        next((comp) => {
-          comp.events = response.data;
-          comp.totalEvents = response.headers["x-total-count"];
-        });
-      })
-      .catch(() => {
-        next({ name: "NetworkError" });
-      })
-      .finally(() => {
-        NProgress.done();
-      });
-  },
-  beforeRouteUpdate(routeTo) {
-    return EventService.getEvents(2, parseInt(routeTo.query.page) || 1)
-      .then((response) => {
-        this.events = response.data;
-        this.totalEvents = response.headers["x-total-count"];
-      })
-      .catch(() => {
-        return { name: "NetworkError" };
-      });
-  },
   computed: {
+    events() {
+      return this.$store.state.events;
+    },
     hasNextPage() {
       let totalPages = Math.ceil(this.totalEvents / 2);
       return this.page < totalPages;
+    },
+    totalEvents() {
+      return this.$store.state.totalEventsCount;
+    },
+  },
+  watch: {
+    page: {
+      handler() {
+        this.$store.dispatch("fetchEvents", [2, this.page]);
+      },
+      immediate: true,
     },
   },
 };
