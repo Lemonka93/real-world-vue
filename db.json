@@ -6,10 +6,14 @@
       "title": "Cat&Dog Adoption Day",
       "description": "Find your new feline friend at this event.",
       "location": "Meow Town",
-      "date": "January 28, 2022",
+      "date": null,
       "time": "12:00",
       "petsAllowed": true,
-      "organizer": "Kat Laydee"
+      "organizer": "Kat Laydee",
+      "extras": {
+        "catering": false,
+        "liveMusic": false
+      }
     },
     {
       "id": 456,
@@ -47,7 +51,7 @@
     {
       "id": 1002,
       "category": "food",
-      "title": "Canned Food Drive",
+      "title": "Canned Food Drive for bomji",
       "description": "Bring your canned food to donate to those in need.",
       "location": "Tin City",
       "date": "September 14, 2022",

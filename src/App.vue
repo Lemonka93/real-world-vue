@@ -40,19 +40,23 @@ export default {};
 #nav a.router-link-exact-active {
   color: #42b983;
 }
+
 h4 {
   font-size: 20px;
   font-weight: 700;
 }
+
 @keyframes greenfade {
   from {
     color: rgba(0, 0, 0, 1);
   }
+
   to {
     background: transparent;
     color: rgba(0, 0, 0, 0);
   }
 }
+
 #flashMessage {
   animation: greenfade 5s;
 }
@@ -108,5 +112,17 @@ input:focus {
 select:focus {
   border-color: #16c0b0;
   outline: 0;
+}
+.errorMessage {
+  color: red;
+  margin-top: 3px;
+}
+label {
+  font-size: 20px;
+}
+input,
+textarea,
+select {
+  font-size: 18px;
 }
 </style>
