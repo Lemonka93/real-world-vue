@@ -27,7 +27,6 @@ export default createStore({
     },
     SET_FLASH_MESSAGE(state, [message, color]) {
       state.flashMessage = { message, color };
-      console.log(state.flashMessage);
     },
   },
   actions: {
@@ -45,7 +44,6 @@ export default createStore({
           })
           .catch((error) => {
             if (error.response && error.response.status == 404) {
-              console.log(router);
               router.push({
                 name: "404Resource",
                 params: { resource: "event" },
@@ -73,7 +71,17 @@ export default createStore({
     createEvent({ commit }, event) {
       return EventService.postEvent(event)
         .then(() => {
-          commit("ADD_EVENT", event);
+          commit("SET_EVENT", event);
+        })
+        .catch((error) => {
+          throw error;
+        });
+    },
+    editEvent({ commit }, event) {
+      EventService.putEvent(event.id, event)
+        .then((result) => {
+          console.log(result);
+          commit("SET_EVENT", result.data);
         })
         .catch((error) => {
           throw error;

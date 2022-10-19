@@ -109,7 +109,7 @@ const router = createRouter({
 
 router.beforeEach((to, from) => {
   NProgress.start();
-  const notAuthorised = true;
+  const notAuthorised = false;
   if (to.meta.requireAuth && notAuthorised) {
     store.dispatch("changeFlashMessage", [
       "Sorry, you are not authorised to view this page",

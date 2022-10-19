@@ -1,69 +1,59 @@
 <template>
   <h3>Edit an Event</h3>
-  <form @submit.prevent="sendForm">
-    <BaseSelect
-      :options="categories"
-      :label="'Category'"
-      v-model="eventC.category"
-    />
-    <fieldset>
-      <legend>Name & describe your event</legend>
-      <BaseInput
-        :label="'Title'"
-        v-model="eventC.title"
-        error="This input has an error!"
+  <div class="class-container">
+    <form @submit.prevent="sendForm">
+      <BaseSelect
+        :options="categories"
+        :label="'Select a category'"
+        v-model="editedEvent.category"
       />
-      <BaseTextarea :label="'Description'" v-model="eventC.description" />
-    </fieldset>
-    <fieldset>
-      <legend>Where is your event?</legend>
-      <BaseInput :label="'Location'" v-model="eventC.location" />
-    </fieldset>
-    <fieldset>
-      <legend>When is your event?</legend>
-      <BaseDate v-model="eventC.date" label="Date" />
-      <BaseTime v-model="eventC.time" label="Time" />
-    </fieldset>
-    <fieldset>
-      <legend>Pets</legend>
-      <BaseRadioGroup
-        name="pets"
-        :options="pets"
-        :label="'Are pets allowed?'"
-        v-model="eventC.pets"
-        :vertical="true"
-      />
-    </fieldset>
-    <fieldset>
-      <legend>Extras</legend>
-      <BaseCheckbox label="Catering" v-model="eventC.extras.catering" />
-      <BaseCheckbox label="Live music" v-model="eventC.extras.liveMusic" />
-    </fieldset>
-    <button type="submit">Submit</button>
-  </form>
+      <fieldset>
+        <legend>Name & describe your event</legend>
+        <BaseInput
+          :label="'Title'"
+          v-model="editedEvent.title"
+          error="This input has an error!"
+        />
+        <BaseTextarea
+          :label="'Description'"
+          v-model="editedEvent.description"
+        />
+      </fieldset>
+      <fieldset>
+        <legend>Where is your event?</legend>
+        <BaseInput :label="'Location'" v-model="editedEvent.location" />
+      </fieldset>
+      <fieldset>
+        <legend>When is your event?</legend>
+        <BaseDate v-model="editedEvent.date" label="Date" />
+        <BaseTime v-model="editedEvent.time" label="Time" />
+      </fieldset>
+      <fieldset>
+        <legend>Pets</legend>
+        <BaseRadioGroup
+          name="pets"
+          :options="pets"
+          :label="'Are pets allowed?'"
+          v-model="editedEvent.pets"
+          :vertical="true"
+        />
+      </fieldset>
+      <fieldset>
+        <legend>Extras</legend>
+        <BaseCheckbox label="Catering" v-model="editedEvent.extras.catering" />
+        <BaseCheckbox
+          label="Live music"
+          v-model="editedEvent.extras.liveMusic"
+        />
+      </fieldset>
+      <button type="submit">Submit</button>
+    </form>
+  </div>
 </template>
 
 <script>
-// import BaseInput from "@/components/BaseInput.vue";
-// import BaseTextarea from "../../components/BaseTextarea.vue";
-// import BaseSelect from "@/components/BaseSelect.vue";
-// import BaseCheckbox from "../../components/BaseCheckbox.vue";
-import EventService from "@/services/EventService.js";
-// import BaseRadioGroup from "../../components/BaseRadioGroup.vue";
-// import BaseDate from "../../components/BaseDate.vue";
-// import BaseTime from "../../components/BaseTime.vue";
-
 export default {
   name: "EventEdit",
-  // components: {
-  //   BaseInput,
-  //   BaseSelect,
-  //   BaseCheckbox,
-  //   BaseRadioGroup,
-  //   BaseDate,
-  //   BaseTextarea,
-  //   BaseTime
-  // },
   props: ["event"],
   data: function () {
     return {
@@ -71,7 +61,7 @@ export default {
         { label: "Yes", value: 1 },
         { label: "No", value: 0 },
       ],
-      eventC: {
+      editedEvent: {
         ...this.event,
         extras: { catering: false, liveMusic: false },
         pets: undefined,
@@ -90,15 +80,34 @@ export default {
   },
   methods: {
     sendForm() {
-      EventService.putEvent(this.eventC.id, this.eventC)
-        .then(console.log("good"))
+      this.$store
+        .dispatch("editEvent", this.editedEvent)
+        .then(() => {
+          this.$store.dispatch("changeFlashMessage", [
+            "Event changed successfully",
+            "#06c145",
+          ]);
+          setTimeout(() => {
+            this.$store.dispatch("changeFlashMessage", ["", ""]);
+          }, 5000);
+          this.$router.push({
+            name: "EventDetails",
+            params: { id: this.editedEvent.id },
+          });
+        })
         .catch((error) => {
-          console.log(error);
+          if (error.code === "ERR_NETWORK") {
+            this.$router.push({ name: "NetworkError" });
+          } else {
+            this.$router.push({
+              name: "ErrorDisplay",
+              params: { error: error },
+            });
+          }
         });
     },
   },
   beforeRouteLeave() {
-    console.log("abc");
     if (this.unsavedChanges) {
       const answer = confirm(
         "Do you really want to leave? You have unsaved changes!"

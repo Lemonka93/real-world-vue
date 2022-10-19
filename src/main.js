@@ -12,7 +12,6 @@ const requireComponent = require.context(
   false,
   /Base[A-Z]\w+\.(vue|js)$/
 );
-console.log(require.context);
 
 const app = createApp(App);
 
@@ -25,4 +24,4 @@ requireComponent.keys().forEach((fileName) => {
 
   app.component(componentName, componentConfig.default || componentConfig);
 });
-app.use(store).use(router).provide("GStore", GStore).mount("#app");
+app.use(store).use(router).mount("#app");

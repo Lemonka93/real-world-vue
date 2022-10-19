@@ -3,7 +3,13 @@
 
   <div class="form-container">
     <form @submit.prevent="onSubmit">
-      <label>Select a category: </label>
+      <BaseSelect
+        :options="categories"
+        :label="'Select a category'"
+        v-model="event.category"
+      />
+
+      <!-- <label>Select a category: </label>
       <select v-model="event.category">
         <option
           v-for="option in categories"
@@ -13,9 +19,17 @@
         >
           {{ option }}
         </option>
-      </select>
-
-      <h3>Name & describe your event</h3>
+      </select> -->
+      <fieldset>
+        <legend>Name & describe your event</legend>
+        <BaseInput
+          :label="'Title'"
+          v-model="event.title"
+          error="This input has an error!"
+        />
+        <BaseTextarea :label="'Description'" v-model="event.description" />
+      </fieldset>
+      <!-- <h3>Name & describe your event</h3>
 
       <label>Title</label>
       <input v-model="event.title" type="text" placeholder="Title" />
@@ -25,19 +39,42 @@
         v-model="event.description"
         type="text"
         placeholder="Description"
-      />
-
-      <h3>Where is your event?</h3>
+      /> -->
+      <fieldset>
+        <legend>Where is your event?</legend>
+        <BaseInput :label="'Location'" v-model="event.location" />
+      </fieldset>
+      <!-- <h3>Where is your event?</h3>
 
       <label>Location</label>
-      <input v-model="event.location" type="text" placeholder="Location" />
-
-      <h3>When is your event?</h3>
+      <input v-model="event.location" type="text" placeholder="Location" /> -->
+      <fieldset>
+        <legend>When is your event?</legend>
+        <BaseDate v-model="event.date" label="Date" />
+        <BaseTime v-model="event.time" label="Time" />
+      </fieldset>
+      <!-- <h3>When is your event?</h3>
       <label>Date</label>
       <input v-model="event.date" type="text" placeholder="Date" />
 
       <label>Time</label>
-      <input v-model="event.time" type="text" placeholder="Time" />
+      <input v-model="event.time" type="text" placeholder="Time" /> -->
+
+      <fieldset>
+        <legend>Pets</legend>
+        <BaseRadioGroup
+          name="pets"
+          :options="pets"
+          :label="'Are pets allowed?'"
+          v-model="event.pets"
+          :vertical="true"
+        />
+      </fieldset>
+      <fieldset>
+        <legend>Extras</legend>
+        <BaseCheckbox label="Catering" v-model="event.extras.catering" />
+        <BaseCheckbox label="Live music" v-model="event.extras.liveMusic" />
+      </fieldset>
 
       <button type="submit">Submit</button>
     </form>
@@ -49,6 +86,10 @@ import { v4 as uuidv4 } from "uuid";
 export default {
   data() {
     return {
+      pets: [
+        { label: "Yes", value: 1 },
+        { label: "No", value: 0 },
+      ],
       categories: [
         "sustainability",
         "nature",
@@ -67,6 +108,8 @@ export default {
         date: "",
         time: "",
         organizer: "",
+        extras: { catering: false, liveMusic: false },
+        pets: undefined,
       },
     };
   },

@@ -69,6 +69,20 @@
       "time": "11:00",
       "petsAllowed": false,
       "organizer": "Brody Kill"
+    },
+    {
+      "id": "b657a1c4-7216-4c2d-ba5e-69afd875f473",
+      "category": "nature",
+      "title": "bad event test",
+      "description": "d",
+      "location": "d",
+      "date": "2022-10-10",
+      "time": "22:07",
+      "organizer": "Valeriya Mironova",
+      "extras": {
+        "catering": false,
+        "liveMusic": false
+      }
     }
   ]
 }
